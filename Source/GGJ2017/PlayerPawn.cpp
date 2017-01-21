@@ -10,14 +10,6 @@ APlayerPawn::APlayerPawn()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	VoiceCaptureSoundsWaveProcedural = NewObject<USoundWaveProcedural>();
-	VoiceCaptureSoundsWaveProcedural->SampleRate = 16000;
-	VoiceCaptureSoundsWaveProcedural->NumChannels = 1;
-	VoiceCaptureSoundsWaveProcedural->Duration = INDEFINITELY_LOOPING_DURATION;
-	VoiceCaptureSoundsWaveProcedural->SoundGroup = SOUNDGROUP_Voice;
-	VoiceCaptureSoundsWaveProcedural->bLooping = false;
-	VoiceCaptureSoundsWaveProcedural->bProcedural = true;
-
 	VoiceCaptureAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("VoiceCaptureAudioComponent"));
 	VoiceCaptureAudioComponent->SetupAttachment(RootComponent);
 	VoiceCaptureAudioComponent->bAutoActivate = true;
@@ -31,6 +23,14 @@ void APlayerPawn::BeginPlay()
 {
 	Super::BeginPlay();
 	VoiceCapture = FVoiceModule::Get().CreateVoiceCapture();
+
+	VoiceCaptureSoundsWaveProcedural = NewObject<USoundWaveProcedural>();
+	VoiceCaptureSoundsWaveProcedural->SampleRate = 16000;
+	VoiceCaptureSoundsWaveProcedural->NumChannels = 1;
+	VoiceCaptureSoundsWaveProcedural->Duration = INDEFINITELY_LOOPING_DURATION;
+	VoiceCaptureSoundsWaveProcedural->SoundGroup = SOUNDGROUP_Voice;
+	VoiceCaptureSoundsWaveProcedural->bLooping = false;
+	VoiceCaptureSoundsWaveProcedural->bProcedural = true;
 
 	if (VoiceCapture.IsValid())
 	{
@@ -65,7 +65,7 @@ void APlayerPawn::SetupPlayerInputComponent(class UInputComponent* InputComponen
 
 void APlayerPawn::VoiceCaptureTick()
 {
-	if (!VoiceCapture.IsValid())
+	if (!VoiceCapture.IsValid() || VoiceCaptureSoundsWaveProcedural == nullptr)
 	{
 		return;
 	}
