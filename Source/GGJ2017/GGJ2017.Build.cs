@@ -6,7 +6,7 @@ public class GGJ2017 : ModuleRules
 {
 	public GGJ2017(TargetInfo Target)
 	{
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "OnlineSubsystem", "OnlineSubsystemUtils", "Voice" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
