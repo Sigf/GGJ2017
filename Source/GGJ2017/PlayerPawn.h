@@ -53,6 +53,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	float HorizontalSpeed;
 
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	float VolumeMultiplier;
+
 
 private:
 

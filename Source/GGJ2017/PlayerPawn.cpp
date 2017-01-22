@@ -23,6 +23,7 @@ APlayerPawn::APlayerPawn()
 	VerticalSpeed = 5;
 	HorizontalSpeed = 2;
 	CurrentHeight = 0;
+	VolumeMultiplier = 1;
 }
 
 // Called when the game starts or when spawned
@@ -106,9 +107,13 @@ void APlayerPawn::VoiceCaptureTick()
 
 		float VoiceCaptureMeanSquare = (2 * (VoiceCaptureTotalSquared / VoiceCaptureBuffer.Num()));
 		float VoiceCaptureRms = FMath::Sqrt(VoiceCaptureMeanSquare);
-		float VoiceCaptureFinalVolume = ((VoiceCaptureRms / 32768.0) * 200.f);
+		float VoiceCaptureFinalVolume = ((VoiceCaptureRms / 32768.0) * 200.f * VolumeMultiplier);
 
 		CurrentVolume = VoiceCaptureFinalVolume;
+		if (CurrentVolume > MaxVolume)
+		{
+			CurrentVolume = MaxVolume;
+		}
 
 		VoiceCaptureAudioComponent->SetSound(VoiceCaptureSoundsWaveProcedural);
 	}
