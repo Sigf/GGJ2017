@@ -35,6 +35,9 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	int CurrentLevel;
 
+	UPROPERTY(BlueprintReadOnly)
+	float CurrentHeight;
+
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	int LevelCounts;
 
@@ -49,6 +52,7 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	float HorizontalSpeed;
+
 
 private:
 

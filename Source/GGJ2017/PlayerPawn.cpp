@@ -22,6 +22,7 @@ APlayerPawn::APlayerPawn()
 	LevelCounts = 5;
 	VerticalSpeed = 5;
 	HorizontalSpeed = 2;
+	CurrentHeight = 0;
 }
 
 // Called when the game starts or when spawned
@@ -126,8 +127,6 @@ void APlayerPawn::SetCurrentLevel()
 
 void APlayerPawn::MoveToLevel(float DeltaTime)
 {
-	FVector NewLocation;
-	FVector OldLocation = GetActorLocation();
 
 	float NewHeight = (MaxHeight / LevelCounts) * CurrentLevel;
 	float Alpha = VerticalSpeed * DeltaTime;
@@ -137,9 +136,9 @@ void APlayerPawn::MoveToLevel(float DeltaTime)
 		Alpha = 1;
 	}
 
-	NewLocation = FVector(OldLocation.X, OldLocation.Y, FMath::Lerp(OldLocation.Z, NewHeight, Alpha));
+	CurrentHeight = FMath::Lerp(CurrentHeight, NewHeight, Alpha);
 
-	SetActorLocation(NewLocation, true);
+	//Mesh->SetRelativeLocation(NewLocation, true);
 }
 
 void APlayerPawn::MoveRight(float DeltaTime)
