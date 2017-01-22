@@ -6,19 +6,17 @@
 #include "OnlineSubsystemUtils.h"
 #include "Sound/SoundWaveProcedural.h"
 
-#include "GameFramework/Pawn.h"
-#include "PlayerPawn.generated.h"
-
-
+#include "GameFramework/Character.h"
+#include "PlayerCharacter.generated.h"
 
 UCLASS()
-class GGJ2017_API APlayerPawn : public APawn
+class GGJ2017_API APlayerCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this pawn's properties
-	APlayerPawn();
+	// Sets default values for this character's properties
+	APlayerCharacter();
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -27,7 +25,7 @@ public:
 	virtual void Tick( float DeltaSeconds ) override;
 
 	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY(BlueprintReadOnly)
 	float CurrentVolume;
@@ -41,14 +39,8 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	float MaxVolume;
 
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	float MaxHeight;
-
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	float VerticalSpeed;
-
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	float HorizontalSpeed;
+	UFUNCTION(BlueprintCallable, Category = "Player Character")
+	void GetCurrentVoiceLevel(int & Level);
 
 private:
 
@@ -65,8 +57,5 @@ private:
 	void VoiceCaptureTick();
 
 	void SetCurrentLevel();
-
-	void MoveToLevel(float DeltaTime);
 	
-	void MoveRight(float DeltaTime);
 };

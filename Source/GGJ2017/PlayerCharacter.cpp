@@ -1,13 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "GGJ2017.h"
-#include "PlayerPawn.h"
+#include "PlayerCharacter.h"
 
 
 // Sets default values
-APlayerPawn::APlayerPawn()
+APlayerCharacter::APlayerCharacter()
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+ 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	VoiceCaptureAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("VoiceCaptureAudioComponent"));
@@ -17,15 +17,12 @@ APlayerPawn::APlayerPawn()
 	VoiceCaptureAudioComponent->PitchMultiplier = 0.85f;
 	VoiceCaptureAudioComponent->VolumeMultiplier = 5.f;
 
-	MaxHeight = 1000;
-	MaxVolume = 200;
 	LevelCounts = 5;
-	VerticalSpeed = 5;
-	HorizontalSpeed = 2;
+	MaxVolume = 200;
 }
 
 // Called when the game starts or when spawned
-void APlayerPawn::BeginPlay()
+void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	VoiceCapture = FVoiceModule::Get().CreateVoiceCapture();
@@ -50,29 +47,33 @@ void APlayerPawn::BeginPlay()
 }
 
 // Called every frame
-void APlayerPawn::Tick( float DeltaTime )
+void APlayerCharacter::Tick( float DeltaTime )
 {
-	Super::Tick( DeltaTime );
+	Super::Tick(DeltaTime);
 
 	VoiceCaptureTick();
 	SetCurrentLevel();
-	MoveToLevel(DeltaTime);
-	MoveRight(DeltaTime);
 
 	if (GEngine)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("Current Level: %d"), CurrentLevel));
 	}
+
 }
 
 // Called to bind functionality to input
-void APlayerPawn::SetupPlayerInputComponent(class UInputComponent* InputComponent)
+void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	Super::SetupPlayerInputComponent(InputComponent);
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
 
-void APlayerPawn::VoiceCaptureTick()
+void APlayerCharacter::GetCurrentVoiceLevel(int & Level)
+{
+	Level = CurrentLevel;
+}
+
+void APlayerCharacter::VoiceCaptureTick()
 {
 	if (!VoiceCapture.IsValid() || VoiceCaptureSoundsWaveProcedural == nullptr)
 	{
@@ -118,32 +119,9 @@ void APlayerPawn::VoiceCaptureTick()
 	}
 }
 
-void APlayerPawn::SetCurrentLevel()
+void APlayerCharacter::SetCurrentLevel()
 {
 	int Step = MaxVolume / LevelCounts;
-	CurrentLevel = FMath::Ceil(CurrentVolume / Step);
-}
-
-void APlayerPawn::MoveToLevel(float DeltaTime)
-{
-	FVector NewLocation;
-	FVector OldLocation = GetActorLocation();
-
-	float NewHeight = (MaxHeight / LevelCounts) * CurrentLevel;
-	float Alpha = VerticalSpeed * DeltaTime;
-
-	if (Alpha > 1)
-	{
-		Alpha = 1;
-	}
-
-	NewLocation = FVector(OldLocation.X, OldLocation.Y, FMath::Lerp(OldLocation.Z, NewHeight, Alpha));
-
-	SetActorLocation(NewLocation, true);
-}
-
-void APlayerPawn::MoveRight(float DeltaTime)
-{
-	AddActorWorldOffset(FVector(0.0, DeltaTime * HorizontalSpeed, 0.0), true);
+	CurrentLevel = FMath::Ceil(CurrentVolume/Step);
 }
 
